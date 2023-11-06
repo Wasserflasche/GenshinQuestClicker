@@ -5,6 +5,7 @@ import pywinauto
 import time
 import win32ui
 import win32gui
+import os
 from ctypes import windll
 from multiprocessing import Process
 from pickle import FALSE
@@ -13,9 +14,7 @@ from pynput import keyboard
 from pywinauto.application import Application
 
 toplist, winlist = [], []
-
-
-#################################################### Help Functions ####################################################### 
+currentPath = os.path.dirname(os.path.realpath(__file__))
 
 def CalcWindow(hwnd):
     left, top, right, bot = win32gui.GetWindowRect(hwnd)
@@ -67,11 +66,11 @@ def GenshinQuestClicker():
 
     ############ Genshin populates two windows. Sometimes you have to access the second one. #############
 
-    ############ Acces first window #########
+    ############ Access first window #########
 
     hwnd = chrome[0][0]
 
-    ############ Acces second window #########
+    ############ Access second window #########
 
     # hwnd = chrome[1][0]
 
@@ -79,8 +78,8 @@ def GenshinQuestClicker():
     rect = pywinauto.win32structures.RECT()
     pywinauto.win32functions.GetWindowRect(window, rect)
     while True:
-        if ReadFromFile("stop.txt") == "0": 
-            ClickObject(window, numpy.array(CalcWindow(hwnd)), ["genshin.png", "genshin2.png"] )
+        if ReadFromFile(currentPath + "\\stop.txt") == "0": 
+            ClickObject(window, numpy.array(CalcWindow(hwnd)), [currentPath + "\\genshin.png", currentPath + "\\genshin2.png"] )
         time.sleep(0.1)  
 
 def GetWindowHandle(app, playerHwnd):
@@ -97,10 +96,10 @@ def Now():
 
 def On_press(key):
     if any([key in z for z in [{keyboard.Key.shift}]]):
-        if ReadFromFile("stop.txt") == "0":
-            WriteToFile("stop.txt", "1")
+        if ReadFromFile(currentPath + "\\stop.txt") == "0":
+            WriteToFile(currentPath + "\\stop.txt", "1")
         else:
-            WriteToFile("stop.txt", "0")  
+            WriteToFile(currentPath + "\\stop.txt", "0")  
     
 def ReadFromFile(fileName):
     with open(fileName) as file:
